@@ -8,3 +8,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Currency"
 include ':app'
+include ':domain'
+include ':converter'
+include ':repository'
+include ':retrofit'
+include ':datastore'
