@@ -17,6 +17,7 @@ class ConversionUseCaseImpl(
         rates.forEach {
             hashMap[Pair(it.from, it.to)] = it.value
         }
+        hashMap[Pair(USD_CURRENCY, USD_CURRENCY)] = 1.0f
 
         return currencyRepository.getCurrencies().mapNotNull { targetCurrency ->
             val sourceRate = hashMap[Pair(USD_CURRENCY, sourceCurrency)]

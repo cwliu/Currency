@@ -3,6 +3,7 @@ package com.codylab.domain
 
 val JPY_CURRENCY = Currency("JPY", "Japanese Yen")
 val USD_CURRENCY = Currency("USD", "United States Dollar")
+val TWD_CURRENCY = Currency("TWD", "New Taiwan Dollar")
 
 val DEFAULT_CURRENCY = JPY_CURRENCY
 
@@ -151,7 +152,7 @@ val SUPPORTED_CURRENCIES = hashMapOf(
     "TOP" to Currency("TOP", "Tongan Paʻanga"),
     "TRY" to Currency("TRY", "Turkish Lira"),
     "TTD" to Currency("TTD", "Trinidad and Tobago Dollar"),
-    "TWD" to Currency("TWD", "New Taiwan Dollar"),
+    "TWD" to TWD_CURRENCY,
     "TZS" to Currency("TZS", "Tanzanian Shilling"),
     "UAH" to Currency("UAH", "Ukrainian Hryvnia"),
     "UGX" to Currency("UGX", "Ugandan Shilling"),
