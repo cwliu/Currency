@@ -5,7 +5,7 @@ import com.codylab.network.currencylayer.CurrencyLayerApi
 import com.codylab.network.currencylayer.LiveRatesResponseMapper
 import com.codylab.network.currencylayer.CurrencyLayerRatesResponseMapperImpl
 import com.codylab.repository.CurrencyRepository
-import com.codylab.repository.datasource.RateDataSource
+import com.codylab.repository.datasource.ReadableRateDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,7 +57,7 @@ internal class CurrencyLayerApiModule {
         currencyLayerApi: CurrencyLayerApi,
         liveRatesResponseMapper: LiveRatesResponseMapper,
         @Named("IO") ioDispatcher: CoroutineDispatcher
-    ): RateDataSource {
+    ): ReadableRateDataSource {
         return CurrencyLayerDataSource(currencyLayerApi, liveRatesResponseMapper, ioDispatcher)
     }
 

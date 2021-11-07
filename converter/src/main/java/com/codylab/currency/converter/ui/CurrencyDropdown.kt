@@ -41,7 +41,7 @@ fun CurrencyDropdown(
         Text(
             text = items.getOrNull(selectedIndex) ?: "",
             textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h5,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = { expanded = true })

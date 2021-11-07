@@ -7,7 +7,7 @@ import com.codylab.domain.Rate
 
 val MOCK_SELECTED_CURRENCY = Currency("THB", "Thai Baht")
 
-val MOCK_CURRENCY_LIST = listOf<Currency>(
+val MOCK_CURRENCY_LIST = listOf(
     Currency("USD", "United States Dollar"),
     Currency("THB", "Thai Baht"),
     Currency("TWD", "New Taiwan Dollar"),

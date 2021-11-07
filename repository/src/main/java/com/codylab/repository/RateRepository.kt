@@ -4,6 +4,7 @@ import com.codylab.domain.Rate
 import kotlinx.coroutines.flow.Flow
 
 
-interface ExchangeRateRepository {
+interface RateRepository {
     suspend fun getRates(): Flow<List<Rate>>
+    suspend fun refreshRateIfNeed()
 }

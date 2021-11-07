@@ -55,6 +55,7 @@ dependencies {
     implementation project(path: ':retrofit')
     implementation project(path: ':converter')
     implementation project(path: ':datastore')
+    implementation project(path: ':room')
 
     implementation deps.composeUI
     implementation deps.composeMaterial
