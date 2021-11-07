@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.codylab.currency.converter.R
-import com.codylab.currency.converter.mock.MOCK_CONVERSION_LIST
+import com.codylab.currency.converter.ui.mock.MOCK_CONVERSION_LIST
 import com.codylab.currency.converter.design.CurrencyTheme
 import com.codylab.domain.Conversion
 

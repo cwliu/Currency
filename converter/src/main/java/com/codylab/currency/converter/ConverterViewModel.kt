@@ -1,5 +1,6 @@
 package com.codylab.currency.converter
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codylab.currency.converter.usecase.ConversionUseCase
@@ -39,15 +40,15 @@ class ConverterViewModel @Inject constructor(
         get() = _conversionList
 
     private val handler = CoroutineExceptionHandler { _, exception ->
-        viewModelScope.launch {
-        }
+        Log.e(ConverterViewModel::class.simpleName, exception?.localizedMessage ?: "")
     }
 
     init {
         _currencyList.value = currencyRepository.getCurrencies()
         viewModelScope.launch(handler) {
             rateRepository.refreshRateIfNeed()
-            _conversionList.value = conversionUseCase.calculateRates(selectedCurrency.value, _amount.value)
+            _conversionList.value =
+                conversionUseCase.calculateRates(selectedCurrency.value, _amount.value)
         }
     }
 

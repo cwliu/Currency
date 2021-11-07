@@ -1,4 +1,4 @@
-package com.codylab.currency.converter.mock
+package com.codylab.currency.converter.ui.mock
 
 import com.codylab.domain.Conversion
 import com.codylab.domain.Currency
