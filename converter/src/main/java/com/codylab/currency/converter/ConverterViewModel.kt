@@ -11,7 +11,10 @@ import com.codylab.repository.CurrencyRepository
 import com.codylab.repository.RateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +23,7 @@ import javax.inject.Inject
 class ConverterViewModel @Inject constructor(
     private val conversionUseCase: ConversionUseCase,
     private val rateRepository: RateRepository,
-    currencyRepository: CurrencyRepository
+    private val currencyRepository: CurrencyRepository
 ) : ViewModel() {
 
     private val _currencyList = MutableStateFlow<List<Currency>>(listOf())
@@ -39,11 +42,22 @@ class ConverterViewModel @Inject constructor(
     val conversionList: StateFlow<List<Conversion>>
         get() = _conversionList
 
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String>
+        get() = _message
+
     private val handler = CoroutineExceptionHandler { _, exception ->
-        Log.e(ConverterViewModel::class.simpleName, exception?.localizedMessage ?: "")
+        Log.e(ConverterViewModel::class.simpleName, exception.localizedMessage ?: "")
+        exception.localizedMessage?.let {
+            viewModelScope.launch {
+                _message.emit(it)
+                delay(3500)
+                _message.emit("")
+            }
+        }
     }
 
-    init {
+    fun onLoad() {
         _currencyList.value = currencyRepository.getCurrencies()
         viewModelScope.launch(handler) {
             rateRepository.refreshRateIfNeed()
@@ -54,15 +68,14 @@ class ConverterViewModel @Inject constructor(
 
     fun onAmountUpdate(amount: Float) {
         _amount.value = amount
-
-        viewModelScope.launch {
+        viewModelScope.launch(handler) {
             _conversionList.value = conversionUseCase.calculateRates(selectedCurrency.value, amount)
         }
     }
 
     fun onCurrencySelect(currency: Currency) {
         _selectedCurrency.value = currency
-        viewModelScope.launch {
+        viewModelScope.launch(handler) {
             _conversionList.value = conversionUseCase.calculateRates(currency, _amount.value)
         }
     }

@@ -29,13 +29,18 @@ fun ConverterScreen(
     selectedCurrency: Currency,
     conversionList: List<Conversion>,
     amount: Float,
+    message: String?,
     onSelectCurrency: (Currency) -> Unit,
-    onAmountUpdate: (Float) -> Unit
+    onAmountUpdate: (Float) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(dimensionResource(R.dimen.margin_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
     ) {
+        if (message?.isNotBlank() == true) {
+            SnackbarInfo(message = message)
+        }
+
         Text(
             text = stringResource(R.string.converter_title),
             style = MaterialTheme.typography.h4,
@@ -68,6 +73,6 @@ fun ConverterPreview() {
         val selectedCurrency = MOCK_SELECTED_CURRENCY
         val conversionList = MOCK_CONVERSION_LIST
         val amount = 100.0f
-        ConverterScreen(currencyList, selectedCurrency, conversionList, amount, {}, {})
+        ConverterScreen(currencyList, selectedCurrency, conversionList, amount, "Message", {}, {})
     }
 }

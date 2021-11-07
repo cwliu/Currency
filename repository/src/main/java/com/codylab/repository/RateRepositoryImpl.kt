@@ -34,13 +34,12 @@ internal class RateRepositoryImpl(
     }
 
     private suspend fun isRateStale(): Boolean {
-//        val lastUpdateTime = settingsRepository.getLastUpdatedTime()
-        val lastUpdateTime = 0
+        val lastUpdateTime = settingsRepository.getLastUpdatedTime()
         val now = timeProvider.now()
-        return now - lastUpdateTime > REFRESH_TIME_IN_MIN * 60 * 1000
+        return now - lastUpdateTime > REFRESH_TIME_IN_MILLI_SECOND
     }
 
     companion object {
-        const val REFRESH_TIME_IN_MIN = 30
+        const val REFRESH_TIME_IN_MILLI_SECOND = 30 * 60 * 1000
     }
 }

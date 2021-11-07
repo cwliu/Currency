@@ -11,7 +11,7 @@ currencylayer_key="<CURRENCYLAYER_KEY>"
 
 ## Dependency Graph
 
-![img.png](https://i.imgur.com/opj6oZd.png)
+![Dependency Graph](https://i.imgur.com/opj6oZd.png)
 
 
 ## Tech stack
