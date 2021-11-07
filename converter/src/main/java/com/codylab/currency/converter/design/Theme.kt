@@ -1,10 +1,14 @@
-package com.codylab.currency.ui.theme
+package com.codylab.currency.converter.design
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.codylab.currency.ui.theme.Red200
+import com.codylab.currency.ui.theme.Red500
+import com.codylab.currency.ui.theme.Red700
+import com.codylab.currency.ui.theme.Teal200
 
 private val DarkColorPalette = darkColors(
     primary = Red200,

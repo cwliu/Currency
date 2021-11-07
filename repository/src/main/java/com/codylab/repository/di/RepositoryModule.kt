@@ -5,7 +5,7 @@ import com.codylab.repository.CurrencyRepositoryImpl
 import com.codylab.repository.ExchangeRateRepository
 import com.codylab.repository.ExchangeRateRepositoryImpl
 import com.codylab.repository.datasource.RateDataSource
-import com.codylab.repository.datasource.Settings
+import com.codylab.repository.datasource.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,11 +24,11 @@ internal class RepositoryModule {
     @Singleton
     fun provideExchangeRateRepository(
         @Named("CurrencyLayer") apiRateDataSource: RateDataSource,
-        settings: Settings
+        settingsRepository: SettingsRepository
     ): ExchangeRateRepository {
         return ExchangeRateRepositoryImpl(
             apiRateDataSource,
-            settings
+            settingsRepository
         )
     }
 }

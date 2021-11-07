@@ -3,50 +3,62 @@ package com.codylab.currency.converter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codylab.currency.converter.usecase.ConversionUseCase
+import com.codylab.domain.Conversion
 import com.codylab.domain.Currency
+import com.codylab.domain.DEFAULT_CURRENCY
+import com.codylab.repository.CurrencyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
     private val conversionUseCase: ConversionUseCase,
+    private val currencyRepository: CurrencyRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ConverterUIState.DEFAULT)
-    val uiState: StateFlow<ConverterUIState> = _uiState
-    private val _events = MutableSharedFlow<Event>()
-    val events = _events.asSharedFlow()
+    private val _currencyList = MutableStateFlow<List<Currency>>(listOf())
+    val currencyList: StateFlow<List<Currency>>
+        get() = _currencyList
+
+    private val _selectedCurrency = MutableStateFlow(DEFAULT_CURRENCY)
+    val selectedCurrency: StateFlow<Currency>
+        get() = _selectedCurrency
+
+    private val _amount = MutableStateFlow(0f)
+    val amount: StateFlow<Float>
+        get() = _amount
+
+    private val _conversionList = MutableStateFlow<List<Conversion>>(listOf())
+    val conversionList: StateFlow<List<Conversion>>
+        get() = _conversionList
 
     private val handler = CoroutineExceptionHandler { _, exception ->
         viewModelScope.launch {
-            _events.emit(Event(exception.localizedMessage ?: ""))
         }
     }
 
-    fun onLoad() {
-        viewModelScope.launch(handler) {
-            _uiState.value = uiState.value.copy(
-                isLoading = true
-            )
-            val currencies = conversionUseCase.getCurrencies()
+    init {
+        _currencyList.value = currencyRepository.getCurrencies()
 
-            _uiState.value = uiState.value.copy(
-                currencyDropDown = currencies.map { "[ ${it.code} ] ${it.name}" },
-                isLoading = false
-            )
+        viewModelScope.launch(handler) {
+            currencyRepository.getCurrencies()
         }
     }
 
     fun onAmountUpdate(amount: Float) {
+        _amount.value = amount
+
+        viewModelScope.launch {
+            _conversionList.value = conversionUseCase.calculateRates(amount)
+        }
     }
 
     fun onCurrencySelect(currency: Currency) {
+        _selectedCurrency.value = currency
     }
 }
 

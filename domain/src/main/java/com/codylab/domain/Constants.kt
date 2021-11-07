@@ -1,7 +1,7 @@
 package com.codylab.domain
 
-const val DEFAULT_CURRENCY_CODE = "USD"
-
+val JPY_CURRENCY = Currency("JPY", "Japanese Yen")
+val DEFAULT_CURRENCY = JPY_CURRENCY
 val SUPPORTED_CURRENCIES = hashMapOf(
     "AED" to Currency("AED", "United Arab Emirates Dirham"),
     "AFN" to Currency("AFN", "Afghan Afghani"),
@@ -75,7 +75,7 @@ val SUPPORTED_CURRENCIES = hashMapOf(
     "JEP" to Currency("JEP", "Jersey Pound"),
     "JMD" to Currency("JMD", "Jamaican Dollar"),
     "JOD" to Currency("JOD", "Jordanian Dinar"),
-    "JPY" to Currency("JPY", "Japanese Yen"),
+    "JPY" to JPY_CURRENCY,
     "KES" to Currency("KES", "Kenyan Shilling"),
     "KGS" to Currency("KGS", "Kyrgystani Som"),
     "KHR" to Currency("KHR", "Cambodian Riel"),

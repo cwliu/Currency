@@ -5,10 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.codylab.datastore.DataStoreMapper
-import com.codylab.datastore.DataStoreMapperImpl
 import com.codylab.datastore.DataStoreSettings
-import com.codylab.repository.datasource.Settings
+import com.codylab.repository.datasource.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,16 +29,9 @@ internal class DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideDataStoreMapper(): DataStoreMapper = DataStoreMapperImpl()
-
-    @Provides
-    @Singleton
     fun provideSettings(
-        dataStore: DataStore<Preferences>,
-        dataStoreMapper: DataStoreMapper
-    ): Settings = DataStoreSettings(
-        dataStore, dataStoreMapper
-    )
+        dataStore: DataStore<Preferences>
+    ): SettingsRepository = DataStoreSettings(dataStore)
 
     companion object {
         const val PREFERENCES_STORE_NAME = "CURRENCY"

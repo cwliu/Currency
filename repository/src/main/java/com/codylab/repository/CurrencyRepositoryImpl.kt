@@ -8,7 +8,7 @@ class CurrencyRepositoryImpl : CurrencyRepository {
         return SUPPORTED_CURRENCIES[code]
     }
 
-    override fun getAllCurrencies(): List<Currency> {
+    override fun getCurrencies(): List<Currency> {
         return SUPPORTED_CURRENCIES.values.toList()
     }
 }

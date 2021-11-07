@@ -1,4 +1,4 @@
-package com.codylab.currency.ui.theme
+package com.codylab.currency.converter.design
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

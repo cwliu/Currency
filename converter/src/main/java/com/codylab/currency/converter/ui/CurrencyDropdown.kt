@@ -23,7 +23,7 @@ fun CurrencyDropdown(
     onCurrencySelect: (Currency) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val items = currencies.map { it.code }
+    val items = currencies.map { "${it.code} ${it.name}" }
     val index = if (currencies.indexOf(selectedCurrency) != -1) {
         currencies.indexOf(selectedCurrency)
     } else {
@@ -39,7 +39,7 @@ fun CurrencyDropdown(
             .padding(dimensionResource(id = R.dimen.margin_small))
     ) {
         Text(
-            text = items[selectedIndex],
+            text = items.getOrNull(selectedIndex) ?: "",
             textAlign = TextAlign.Right,
             style = MaterialTheme.typography.h6,
             modifier = Modifier

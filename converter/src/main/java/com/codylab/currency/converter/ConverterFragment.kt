@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -20,12 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.codylab.currency.converter.design.CurrencyTheme
 import com.codylab.currency.converter.mock.MOCK_CONVERSION_LIST
 import com.codylab.currency.converter.mock.MOCK_CURRENCY_LIST
 import com.codylab.currency.converter.mock.MOCK_SELECTED_CURRENCY
 import com.codylab.currency.converter.ui.ConversionList
 import com.codylab.currency.converter.ui.CurrencyDropdown
-import com.codylab.currency.ui.theme.CurrencyTheme
 import com.codylab.domain.Conversion
 import com.codylab.domain.Currency
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,13 +37,20 @@ class ConverterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         return ComposeView(requireContext()).apply {
             setContent {
                 CurrencyTheme {
+                    val amount by viewModel.amount.collectAsState()
+                    val selectedCurrency by viewModel.selectedCurrency.collectAsState()
+                    val currencyList by viewModel.currencyList.collectAsState()
+                    val conversionList by viewModel.conversionList.collectAsState()
+
                     ConverterScreen(
-                        currencyList = MOCK_CURRENCY_LIST,
-                        selectedCurrency = MOCK_SELECTED_CURRENCY,
-                        conversionList = MOCK_CONVERSION_LIST,
+                        currencyList = currencyList,
+                        selectedCurrency = selectedCurrency,
+                        conversionList = conversionList,
+                        amount = amount,
                         onSelectCurrency = viewModel::onCurrencySelect,
                         onAmountUpdate = viewModel::onAmountUpdate
                     )
@@ -59,11 +65,10 @@ fun ConverterScreen(
     currencyList: List<Currency>,
     selectedCurrency: Currency,
     conversionList: List<Conversion>,
+    amount: Float,
     onSelectCurrency: (Currency) -> Unit,
     onAmountUpdate: (Float) -> Unit
 ) {
-    var amount by remember { mutableStateOf("0") }
-
     Column(
         modifier = Modifier.padding(dimensionResource(R.dimen.margin_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
@@ -75,10 +80,9 @@ fun ConverterScreen(
             textAlign = TextAlign.Center
         )
         TextField(
-            value = amount,
+            value = amount.toString(),
             onValueChange = { value ->
                 value.toFloatOrNull()?.let {
-                    amount = value.removePrefix("0")
                     onAmountUpdate(it)
                 }
             },
@@ -100,6 +104,7 @@ fun ConverterPreview() {
         val currencyList = MOCK_CURRENCY_LIST
         val selectedCurrency = MOCK_SELECTED_CURRENCY
         val conversionList = MOCK_CONVERSION_LIST
-        ConverterScreen(currencyList, selectedCurrency, conversionList, {}, {})
+        val amount = 100.0f
+        ConverterScreen(currencyList, selectedCurrency, conversionList, amount, {}, {})
     }
 }
