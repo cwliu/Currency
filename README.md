@@ -2,6 +2,8 @@
 
 A Simple Currency conversion app to demonstrate the modern android development
 
+![screenshot](blob:https://imgur.com/395a1e25-a72b-451d-93f5-cf5bd51f2708)
+
 ## Setup
 
 Add your CURRENCYLAYER_KEY key in gradle.properties
