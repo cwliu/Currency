@@ -1,60 +1,105 @@
 package com.codylab.currency.converter
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.codylab.currency.converter.databinding.FragmentConverterBinding
+import com.codylab.currency.converter.mock.MOCK_CONVERSION_LIST
+import com.codylab.currency.converter.mock.MOCK_CURRENCY_LIST
+import com.codylab.currency.converter.mock.MOCK_SELECTED_CURRENCY
+import com.codylab.currency.converter.ui.ConversionList
+import com.codylab.currency.converter.ui.CurrencyDropdown
+import com.codylab.currency.ui.theme.CurrencyTheme
+import com.codylab.domain.Conversion
+import com.codylab.domain.Currency
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class ConverterFragment : Fragment() {
     private val viewModel: ConverterViewModel by viewModels()
-    private lateinit var binding: FragmentConverterBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentConverterBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collect { uiState ->
-                renderUIState(uiState)
-            }
-
-            viewModel.events.collect { event: Event ->
-                renderEvent(event)
+        return ComposeView(requireContext()).apply {
+            setContent {
+                CurrencyTheme {
+                    ConverterScreen(
+                        currencyList = MOCK_CURRENCY_LIST,
+                        selectedCurrency = MOCK_SELECTED_CURRENCY,
+                        conversionList = MOCK_CONVERSION_LIST,
+                        onSelectCurrency = viewModel::onCurrencySelect,
+                        onAmountUpdate = viewModel::onAmountUpdate
+                    )
+                }
             }
         }
     }
+}
 
-    override fun onStart() {
-        super.onStart()
+@Composable
+fun ConverterScreen(
+    currencyList: List<Currency>,
+    selectedCurrency: Currency,
+    conversionList: List<Conversion>,
+    onSelectCurrency: (Currency) -> Unit,
+    onAmountUpdate: (Float) -> Unit
+) {
+    var amount by remember { mutableStateOf("0") }
 
-        viewModel.onLoad()
+    Column(
+        modifier = Modifier.padding(dimensionResource(R.dimen.margin_medium)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
+    ) {
+        Text(
+            text = stringResource(R.string.converter_title),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        TextField(
+            value = amount,
+            onValueChange = { value ->
+                value.toFloatOrNull()?.let {
+                    amount = value.removePrefix("0")
+                    onAmountUpdate(it)
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.End),
+            maxLines = 1,
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        CurrencyDropdown(currencyList, selectedCurrency, onSelectCurrency)
+        ConversionList(conversionList)
     }
+}
 
-    private fun renderUIState(uiState: ConverterUIState) {
-        binding.progressBar.visibility = if (uiState.isLoading) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-
-    }
-
-    private fun renderEvent(event: Event) {
-        Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+@Preview(showBackground = true)
+@Composable
+fun ConverterPreview() {
+    CurrencyTheme(darkTheme = false) {
+        val currencyList = MOCK_CURRENCY_LIST
+        val selectedCurrency = MOCK_SELECTED_CURRENCY
+        val conversionList = MOCK_CONVERSION_LIST
+        ConverterScreen(currencyList, selectedCurrency, conversionList, {}, {})
     }
 }

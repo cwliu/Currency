@@ -30,9 +30,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        useIR = true
     }
     buildFeatures {
+        compose true
         viewBinding true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion composeVersion
+        kotlinCompilerVersion '1.5.21'
     }
 }
 
@@ -52,6 +58,8 @@ dependencies {
     implementation deps.lifecycle
     implementation deps.activityCompose
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation deps.composeAccompanist
+    debugImplementation deps.composeDebugTool
 
     implementation deps.hiltAndroid
     kapt deps.hiltCompiler

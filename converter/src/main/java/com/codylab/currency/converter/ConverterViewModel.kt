@@ -2,7 +2,8 @@ package com.codylab.currency.converter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codylab.currency.converter.usecase.ConvertUseCase
+import com.codylab.currency.converter.usecase.ConversionUseCase
+import com.codylab.domain.Currency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,12 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
-    private val convertUseCase: ConvertUseCase
+    private val conversionUseCase: ConversionUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ConverterUIState.DEFAULT)
     val uiState: StateFlow<ConverterUIState> = _uiState
-
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
@@ -34,30 +34,19 @@ class ConverterViewModel @Inject constructor(
             _uiState.value = uiState.value.copy(
                 isLoading = true
             )
-
-            val currencies = convertUseCase.refreshRates()
+            val currencies = conversionUseCase.getCurrencies()
 
             _uiState.value = uiState.value.copy(
-                currencies = currencies,
+                currencyDropDown = currencies.map { "[ ${it.code} ] ${it.name}" },
                 isLoading = false
             )
         }
     }
 
-    suspend fun onAmountChanged(amount: Float) {
-        val currencies = convertUseCase.calculateRates(amount)
-        _uiState.value = uiState.value.copy(
-            currencies = currencies
-        )
+    fun onAmountUpdate(amount: Float) {
     }
 
-    suspend fun onCurrencySelected(currencyCode: String) {
-        val currentAmount = _uiState.value.amount
-        convertUseCase.saveSelectedCurrency(currencyCode)
-        val currencies = convertUseCase.calculateRates(currentAmount)
-        _uiState.value = uiState.value.copy(
-            currencies = currencies
-        )
+    fun onCurrencySelect(currency: Currency) {
     }
 }
 

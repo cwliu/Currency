@@ -1,6 +1,6 @@
 package com.codylab.currency.converter
 
-data class DisplayCurrency(
+data class ConversionUIModel(
     val code: String,
     val name: String,
     val amount: Float?
